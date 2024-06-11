@@ -1,8 +1,11 @@
 import './style-document.css'
 import {Link} from "react-router-dom"
 import {Button, Card} from 'react-bootstrap';
+import '../../routes/index'
 
 const ListDocument = () => {
+    
+
     return (
         <div className="container py-5">
             <div className="contenNav mb-5">
@@ -22,6 +25,7 @@ const ListDocument = () => {
                     <li className="nav-item">
                         <Link className="nav-link active" aria-current="page">ST</Link>
                     </li>
+                    
                 </ul>
                 <input type="text" className="form-control" placeholder="Search"/>
             </div>

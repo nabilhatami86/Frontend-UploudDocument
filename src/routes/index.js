@@ -24,11 +24,7 @@ const RouterAplication = () => {
                 <Route path="/" element={<ListDocument />}/>
                 <Route path="/login" element={<Login />}/>
                 <Route path="/register" element={<Register />}/>
-                <Route
-                    path="/"
-                    element={token !== null && role === 'admin'
-                        ? <UploadDocument/>
-                        : <Login/>
+                <Route path="/uploudDocument" element={token !== null && role === 'admin' ? <UploadDocument/> : <Login/>
                     }
                 />
 
