@@ -1,0 +1,11 @@
+.contenNav{
+    width: 500px;
+    margin: auto;
+}
+
+
+@media (max-width:	720px) {
+    .contenNav{
+        width:  100%;
+    }
+}
