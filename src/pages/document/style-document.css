@@ -10,3 +10,15 @@
     }
 }
 
+.no-col{
+    width: 2%;
+}
+.date-col{
+    width: 9%;
+}
+.category-col{
+    width: 9%;
+}
+.action-col{
+    width:  2%;
+}

@@ -1,5 +1,6 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-import React, {useState} from 'react';
+import Form from 'react-bootstrap/Form';
+import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 
 const FileUpload = () => {
@@ -7,31 +8,41 @@ const FileUpload = () => {
     const [fileName, setFileName] = useState('Choose file');
     const [uploadProgress, setUploadProgress] = useState(0);
     const [message, setMessage] = useState('');
-
-    const handleFileChange = (event) => {
-        setSelectedFile(event.target.files[0]);
-        setFileName(event.target.files[0].name);
-    };
-
+    const [category, setCategoty] = useState([])
+    const [categoryId, setCategoryId] = useState(null)
+    const token = localStorage.getItem('token')
+    console.log(token)
+    // const handleFileChange = (event) => { setSelectedFile(event.target.files[0])
+    // setFileName(event.target.files[0].name); };
+    useEffect(() => {
+        axios.get('http://localhost:5000/category')
+        .then((response) => {
+            setCategoty(response.data)
+        })
+        .catch((error) => {
+            console.log(error)
+        })
+    },[])
+    console.log(category)
     const handleUpload = async () => {
         if (!selectedFile) {
             setMessage('Please select a file first!');
             return;
         }
+        console.log(selectedFile)
 
         const formData = new FormData();
-        formData.append('file', selectedFile);
+        formData.append('document', selectedFile);
+        formData.append('categoryId', categoryId);
 
         try {
-             await axios.post('http://localhost:5000/upload', formData, {
+            await axios.post('http://localhost:5000/upload', formData, {
                 headers: {
-                    'Content-Type': 'multipart/form-data'
+                    'Content-Type': 'multipart/form-data',
+                    'Authorization': `Bearer ${token}`
                 },
-                onUploadProgress: (progressEvent) => {
-                    setUploadProgress(
-                        Math.round((progressEvent.loaded * 100) / progressEvent.total)
-                    );
-                }
+                // onUploadProgress: (progressEvent) => {     setUploadProgress(
+                // Math.round((progressEvent.loaded * 100) / progressEvent.total)     ); }
             });
 
             setMessage('File uploaded successfully!');
@@ -54,18 +65,26 @@ const FileUpload = () => {
                         <div className="card-body">
                             <h5 className="card-title">Upload Document</h5>
                             <div className="mb-3">
+                                <label htmlFor="categorySelect" className="form-label mt-3">Category</label>
+                                <Form.Select id="categorySelect" aria-label="Default select example"onChange={e=>setCategoryId(e.target.value)} className="mb-3">
+                                    <option>Open this select menu</option>
+                                    {category.map((data, index) => (
+                                        <option key={index} value={data.id}>{data.name}</option>
+                                    ))}
+                                </Form.Select>
                                 <label htmlFor="formFile" className="form-label">Select File</label>
+                                
                                 <input
                                     className="form-control"
                                     type="file"
                                     id="formFile"
-                                    onChange={handleFileChange}/>
+                                    onChange={(e) => setSelectedFile(e.target.files[0])}/>
                             </div>
                             <button className="btn btn-primary" onClick={handleUpload}>
                                 <i className="fas fa-upload me-1"></i>
                                 Upload
                             </button>
-
+    
                         </div>
                         {
                             selectedFile && (
