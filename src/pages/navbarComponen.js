@@ -45,10 +45,14 @@ const NavbarComponent = () => {
                 </div>
                 <div className='d-none d-lg-block'>
                     {token && role ? (
-                        <>
-                            <button onClick={logout} className='btn btn-danger ms-2 custom-btn'>Logout</button>
-                            <button onClick={() => navigate('/register')} className='btn btn-danger ms-2 custom-btn'>Register</button>
-                        </>
+                       <div className='d-inline-flex'>
+                            <button onClick={logout} className='btn btn-danger ms-2 custom-btn small-btn d-flex align-items-center'>
+                                <FontAwesomeIcon icon={faSignOutAlt} className="me-2" /> Logout
+                            </button>
+                            <button onClick={() => navigate('/register')} className='btn btn-danger ms-2 custom-btn small-btn d-flex align-items-center'>
+                                <FontAwesomeIcon icon={faUserPlus} className="me-2" /> Register
+                            </button>
+                        </div>
                     ) : (
                         <div className='d-flex'>
                             <button onClick={() => navigate('/login')} className='btn btn-danger custom-btn'>Login</button>
