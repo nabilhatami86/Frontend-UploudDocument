@@ -1,5 +1,18 @@
-/* styles.css */
 .bg-red {
-    background-color: red !important;
-  }
+  background-color: red !important;
+}
+.custom-btn {
+  border: 0.5px solid white;
+  width: 95px;
+}
+.small-btn {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.875rem;
   
+}
+.navbar .d-lg-flex .btn {
+  margin-right: 0.5rem;
+}
+.navbar .d-lg-flex .btn:last-child {
+  margin-right: 0;
+}
