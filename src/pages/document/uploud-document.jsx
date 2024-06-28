@@ -11,7 +11,6 @@ const FileUpload = () => {
     const [category, setCategoty] = useState([])
     const [categoryId, setCategoryId] = useState(null)
     const token = localStorage.getItem('token')
-    console.log(token)
     // const handleFileChange = (event) => { setSelectedFile(event.target.files[0])
     // setFileName(event.target.files[0].name); };
     useEffect(() => {
@@ -23,13 +22,11 @@ const FileUpload = () => {
             console.log(error)
         })
     },[])
-    console.log(category)
     const handleUpload = async () => {
         if (!selectedFile) {
             setMessage('Please select a file first!');
             return;
         }
-        console.log(selectedFile)
 
         const formData = new FormData();
         formData.append('document', selectedFile);
@@ -80,7 +77,7 @@ const FileUpload = () => {
                                     id="formFile"
                                     onChange={(e) => setSelectedFile(e.target.files[0])}/>
                             </div>
-                            <button className="btn btn-primary" onClick={handleUpload}>
+                            <button className="btn btn-danger" onClick={handleUpload}>
                                 <i className="fas fa-upload me-1"></i>
                                 Upload
                             </button>

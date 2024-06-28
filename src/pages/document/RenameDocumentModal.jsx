@@ -7,7 +7,6 @@ const RenameDocumentModal = ({ show, handleClose, documentId, token, setDocument
     const [categoryId, setCategoryId] = useState('');
     const [category, setCategory] = useState([]);
 
-    console.log(documentId)
     useEffect(() => {
         axios
             .get('http://localhost:5000/category')

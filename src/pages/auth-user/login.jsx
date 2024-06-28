@@ -61,7 +61,7 @@ const Login = () => {
             </div>
 
             <ToastContainer position="center-center" className="p-3">
-                <Toast onClose={() => setShowSuccess(false)} show={showSuccess} delay={3000} autohide bg="success">
+                <Toast onClose={() => setShowSuccess(false)} show={showSuccess} delay={30} autohide bg="success">
                     <Toast.Header>
                         <strong className="me-auto">Success</strong>
                     </Toast.Header>

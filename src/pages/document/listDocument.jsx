@@ -10,19 +10,20 @@ import RenameDocumentModal from './RenameDocumentModal';
 const ListDocument = () => {
     const [documents, setDocuments] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
-    const [selectedFile, setSelectedFile] = useState(null);
-    const [categoryId, setCategoryId] = useState('');
+    // const [selectedFile, setSelectedFile] = useState(null);
+    // const [categoryId, setCategoryId] = useState('');
     const [showModal, setShowModal] = useState(false);
     const [loading, setLoading] = useState(true)
     const [selectedDocument, setSelectedDocument] = useState(false);
-    const Navigate = useNavigate()
+    // const [email, setEmail] = useState('');
+
+    // const Navigate = useNavigate()
     const token = localStorage.getItem('token')
     
     const filterCategory = (category)=>{
         axios
         .get(`http://localhost:5000/list?category=${category}`)
         .then(response => {
-            console.log(response.data)
             setDocuments(response.data);
             setLoading(false)
         })
@@ -31,12 +32,10 @@ const ListDocument = () => {
         });
     }
 
-    console.log(token)
     useEffect(() => {
         axios
             .get('http://localhost:5000/list')
             .then(response => {
-                console.log(response.data)
                 setDocuments(response.data);
                 setLoading(false)
             })
@@ -46,6 +45,10 @@ const ListDocument = () => {
     }, []);
 
     const deleteDocuments = (id) => {
+
+        const userRole = localStorage.getItem('role');
+
+        if(userRole === 'admin' || userRole === 'staff') {
         axios
             .delete(`http://localhost:5000/delete/${id}`, {
                 headers: {
@@ -56,7 +59,6 @@ const ListDocument = () => {
                 axios
                     .get('http://localhost:5000/list')
                     .then(response => {
-                        console.log(response.data)
                         setDocuments(response.data);
                     })
                     .catch(error => {
@@ -66,90 +68,90 @@ const ListDocument = () => {
             .catch(error => {
                 console.error(error)
             })
+        } else {
+            alert('Anda Tidak Memiliki Akses Untuk Menghapus Dokument')
         }
+        
+    }
 
     const handleShowRenameModal = (id) => {
+        const userRole = localStorage.getItem('role');
+        if (userRole ==='admin' || userRole === 'staff') {
         setSelectedDocument(id);
         setShowModal(true);
+        } else {
+            alert('Anda Tidak Memiliki Akses Untuk Melakukan Rename')
+        }
     };
-
     const handleCloseModal = () => setShowModal(false);
 
-    const downloadDocument = async (id, name) => {
-        try {
-            const response = await axios(
-                {url: `http://localhost:5000/download/${id}`, method: 'GET', responseType: 'blob'}
-            );
-
+    const downloadDocument = (id, name) => {
+        axios({
+            url: `http://localhost:5000/download/${id}`,
+            method: 'GET',
+            responseType: 'blob'
+        })
+        .then(response => {
             const urlName = name;
             const parts = urlName.split('/');
             const filename = parts[parts.length - 1];
-            const extension = filename
-                .split('.')
-                .pop();
+            const extension = filename.split('.').pop();
             const basename = filename.substring(0, filename.lastIndexOf('.'));
             const newFilename = `${basename}.${extension}`;
+    
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+    
 
-            console.log(basename)
-            const url = window
-                .URL
-                .createObjectURL(new Blob([response.data]));
-
-            // Create a temporary anchor element and trigger the download
             const link = document.createElement('a');
             link.href = url;
             link.setAttribute('download', newFilename);
-            document
-                .body
-                .appendChild(link);
+            document.body.appendChild(link);
             link.click();
-
+    
             // Clean up
-            document
-                .body
-                .removeChild(link);
-            window
-                .URL
-                .revokeObjectURL(url);
-        } catch (error) {
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(url);
+        })
+        .catch(error => {
             console.error('Error downloading document:', error);
-            // Handle errors, e.g. show an alert to the user alert('Failed to download
-            // document. Please try again later.');
-        }
+            alert('Failed to download document. Please try again later.');
+        });
     };
+    
+
+    const handleSearch = (event) => {
+        setSearchTerm(event.target.value);
+    };
+
+    const filteredDocuments = documents.filter(document =>
+        document.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
 
     return (
         <div className="container py-5">
             <div className="contenNav mb-5">
                 <ul className="nav justify-content-center">
                     <li className="nav-item">
-                        <Link className="nav-link active" aria-current="page" onClick={()=>filterCategory('PERPRES')}>Pepres</Link>
+                        <Link className="nav-link active" aria-current="page" onClick={()=>filterCategory('Perpres')}><small>Pepres</small></Link>
                     </li>
                     <li className="nav-item">
-                        <Link className="nav-link active" aria-current="page" onClick={()=>filterCategory('Notulensi')}>Notulensi</Link>
+                        <Link className="nav-link active" aria-current="page" onClick={()=>filterCategory('Notulensi')}><small>Notulensi</small></Link>
                     </li>
                     <li className="nav-item">
-                        <Link className="nav-link active" aria-current="page" onClick={()=>filterCategory('Nota Dinas')}>Nota Dinas</Link>
+                        <Link className="nav-link active" aria-current="page" onClick={()=>filterCategory('Nota Dinas')}><small>Nota Dinas</small></Link>
                     </li>
                     <li className="nav-item">
-                        <Link className="nav-link active" aria-current="page" onClick={()=>filterCategory('Undangan')}>Undangan</Link>
+                        <Link className="nav-link active" aria-current="page" onClick={()=>filterCategory('Undangan')}><small>Undangan</small></Link>
                     </li>
                     <li className="nav-item">
-                        <Link className="nav-link active" aria-current="page" onClick={()=>filterCategory('ST')}>ST</Link>
+                        <Link className="nav-link active" aria-current="page" onClick={()=>filterCategory('Surat Tugas')}><small>Surat Tugas</small></Link>
                     </li>
                 </ul>
-                <input type="text" className="form-control" placeholder="Search"
-                    // value={searchTerm}
-                    
-                    // onChange={handleSearch}
-                />
+                <input type="text" className="form-control" placeholder="Search" value={searchTerm} onChange={handleSearch} />
             </div>
 
             <Table
-                // striped="striped"
-                
-                // bordered="bordered"
-                hover="hover" responsive="responsive" className="table table-borderless">
+                hover="hover" responsive="responsive" className="table table-sm custom-table">
                 <thead >
                     <tr>
                         <th>No</th>
@@ -163,11 +165,11 @@ const ListDocument = () => {
                     {
                         loading
                             ? (<div>Loading...</div>)
-                            : documents.map((document, index) => (
+                            : filteredDocuments.map((document, index) => (
                                 <tr key={document.id}>
                                     <td className='no-col'>{index + 1}</td>
                                     <td>
-                                        <Link to={document.document} className='text-decoration-none'>{document.name}</Link>
+                                        <a href={document.document} className='document-name text-decoration-none' target="_blank" rel="noopener noreferrer">{document.name}</a>
                                     </td>
                                     <td className='category-col'>
                                         {
@@ -181,7 +183,7 @@ const ListDocument = () => {
                                     </td>
                                     <td className='action-col '>
                                         <Dropdown>
-                                            <Dropdown.Toggle variant="danger" id="dropdown-basic">
+                                        <Dropdown.Toggle variant="danger" id="dropdown-basic" className="custom-dropdown">
                                                 Action
                                             </Dropdown.Toggle>
 
