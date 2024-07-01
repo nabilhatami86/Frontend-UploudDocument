@@ -35,7 +35,7 @@ const NavbarComponent = () => {
                 </button>
                 <div className={`collapse navbar-collapse ${isOpen ? 'show' : ''}`} id="navbarNav">
                     <ul className="navbar-nav">
-                        {token && role === 'admin' && (
+                        {token && (role === 'admin' || role === 'staff') && (
                             <li className="nav-item">
                                 <Link className="nav-link text-white d-flex align-items-center" to="/uploudDocument">
                                     <FontAwesomeIcon icon={faUpload} className="me-2" /> Upload
@@ -50,9 +50,11 @@ const NavbarComponent = () => {
                             <button onClick={logout} className='btn btn-danger ms-2 custom-btn small-btn d-flex align-items-center'>
                                 <FontAwesomeIcon icon={faSignOutAlt} className="me-2" /> Logout
                             </button>
+                            {role === 'admin' && (
                             <button onClick={() => navigate('/register')} className='btn btn-danger ms-2 custom-btn small-btn d-flex align-items-center'>
                                 <FontAwesomeIcon icon={faUserPlus} className="me-2" /> Register
                             </button>
+                            )}
                         </div>
                     ) : (
                         <div className='d-flex'>

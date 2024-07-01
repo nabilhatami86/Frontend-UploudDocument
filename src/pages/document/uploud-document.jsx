@@ -38,8 +38,6 @@ const FileUpload = () => {
                     'Content-Type': 'multipart/form-data',
                     'Authorization': `Bearer ${token}`
                 },
-                // onUploadProgress: (progressEvent) => {     setUploadProgress(
-                // Math.round((progressEvent.loaded * 100) / progressEvent.total)     ); }
             });
 
             setMessage('File uploaded successfully!');
@@ -47,7 +45,6 @@ const FileUpload = () => {
             setMessage('Error uploading file');
             console.error('Error uploading file:', error);
         }
-
         // Reset the file input
         setSelectedFile(null);
         setFileName('Choose file');
