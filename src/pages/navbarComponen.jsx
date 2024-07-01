@@ -46,6 +46,7 @@ const NavbarComponent = () => {
                 </div>
                 <div className='d-none d-lg-block'>
                     {token && role ? (
+<<<<<<< HEAD:src/pages/navbarComponen.jsx
                         <div className='d-inline-flex'>
                             <button onClick={logout} className='btn btn-danger ms-2 custom-btn small-btn d-flex align-items-center'>
                                 <FontAwesomeIcon icon={faSignOutAlt} className="me-2" /> Logout
@@ -55,6 +56,15 @@ const NavbarComponent = () => {
                                 <FontAwesomeIcon icon={faUserPlus} className="me-2" /> Register
                             </button>
                             )}
+=======
+                       <div className='d-inline-flex'>
+                            <button onClick={logout} className='btn btn-danger ms-2 custom-btn small-btn d-flex align-items-center'>
+                                <FontAwesomeIcon icon={faSignOutAlt} className="me-2" /> Logout
+                            </button>
+                            <button onClick={() => navigate('/register')} className='btn btn-danger ms-2 custom-btn small-btn d-flex align-items-center'>
+                                <FontAwesomeIcon icon={faUserPlus} className="me-2" /> Register
+                            </button>
+>>>>>>> cc47fce205034260a67f6fa613cace0d5a5ac472:src/pages/navbarComponen.js
                         </div>
                     ) : (
                         <div className='d-flex'>
