@@ -9,9 +9,6 @@ const RouterAplication = () => {
     const token = localStorage.getItem('token');
     const role = localStorage.getItem('role');
 
-    console.log('Token:', token);
-    console.log('Role:', role);
-
     return (
         <div>
             <NavbarComponen/>

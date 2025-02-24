@@ -1,8 +1,8 @@
 import Dropdown from 'react-bootstrap/Dropdown';
 import React, {useEffect, useState} from 'react';
 import './style-document.css';
-import {Link, useNavigate} from 'react-router-dom';
-import {Button, Table, Form} from 'react-bootstrap';
+import {Link} from 'react-router-dom';
+import { Table, Spinner } from 'react-bootstrap';
 import axios from 'axios';
 import '../../routes/index';
 import RenameDocumentModal from './RenameDocumentModal';
@@ -10,14 +10,10 @@ import RenameDocumentModal from './RenameDocumentModal';
 const ListDocument = () => {
     const [documents, setDocuments] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
-    // const [selectedFile, setSelectedFile] = useState(null);
-    // const [categoryId, setCategoryId] = useState('');
     const [showModal, setShowModal] = useState(false);
     const [loading, setLoading] = useState(true)
     const [selectedDocument, setSelectedDocument] = useState(false);
-    // const [email, setEmail] = useState('');
 
-    // const Navigate = useNavigate()
     const token = localStorage.getItem('token')
     
     const filterCategory = (category)=>{
@@ -45,9 +41,7 @@ const ListDocument = () => {
     }, []);
 
     const deleteDocuments = (id) => {
-
         const userRole = localStorage.getItem('role');
-
         if(userRole === 'admin' || userRole === 'staff') {
         axios
             .delete(`http://localhost:5000/delete/${id}`, {
@@ -86,11 +80,10 @@ const ListDocument = () => {
     const handleCloseModal = () => setShowModal(false);
 
     const downloadDocument = (id, name) => {
-        axios({
-            url: `http://localhost:5000/download/${id}`,
-            method: 'GET',
-            responseType: 'blob'
-        })
+        axios
+            .get(`http://localhost:5000/download/${id}`, {
+                responseType: 'blob' 
+            })
         .then(response => {
             const urlName = name;
             const parts = urlName.split('/');
@@ -132,7 +125,7 @@ const ListDocument = () => {
             <div className="contenNav mb-5">
                 <ul className="nav justify-content-center">
                     <li className="nav-item">
-                        <Link className="nav-link active" aria-current="page" onClick={()=>filterCategory('Perpres')}><small>Pepres</small></Link>
+                        <Link className="nav-link active" aria-current="page" onClick={()=>filterCategory('Perpres')}><small>Perpres</small></Link>
                     </li>
                     <li className="nav-item">
                         <Link className="nav-link active" aria-current="page" onClick={()=>filterCategory('Notulensi')}><small>Notulensi</small></Link>
@@ -150,6 +143,7 @@ const ListDocument = () => {
                 <input type="text" className="form-control" placeholder="Search" value={searchTerm} onChange={handleSearch} />
             </div>
 
+
             <Table
                 hover="hover" responsive="responsive" className="table table-sm custom-table">
                 <thead >
@@ -162,15 +156,21 @@ const ListDocument = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {
-                        loading
-                            ? (<div>Loading...</div>)
-                            : filteredDocuments.map((document, index) => (
+                {loading ? (
+                        <tr>
+                            <td colSpan="5" className="text-center">
+                                <Spinner animation="border" role="status" variant="danger" />
+                                <span className="ms-2">Loading...</span>
+                            </td>
+                        </tr>
+                    ) : (
+                        filteredDocuments.map((document, index) => (
                                 <tr key={document.id}>
                                     <td className='no-col'>{index + 1}</td>
                                     <td>
                                         <a href={document.document} className='document-name text-decoration-none' target="_blank" rel="noopener noreferrer">{document.name}</a>
                                     </td>
+                                    
                                     <td className='category-col'>
                                         {
                                             document.Category
@@ -196,7 +196,7 @@ const ListDocument = () => {
                                     </td>
                                 </tr>
                             ))
-                    }
+                    )}
                 </tbody>
             </Table>
             {
